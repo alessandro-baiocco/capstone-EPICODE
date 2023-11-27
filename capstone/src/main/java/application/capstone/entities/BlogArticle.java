@@ -26,6 +26,7 @@ public class BlogArticle {
     private String titolo;
     private String svillupatore;
     private String pubblicazione;
+    @Enumerated(EnumType.STRING)
     private Tema tema;
     private String storia;
     private String esperienza;
@@ -33,6 +34,8 @@ public class BlogArticle {
     @OneToOne
     @JoinColumn(name = "blogCard_id")
     private BlogCard blogCard;
+    @OneToMany
+    private List<Comment> comments;
 
 
 
