@@ -19,7 +19,8 @@ public class BlogCard {
     @Enumerated(EnumType.STRING)
     private List<Genere> genresList;
     private String description;
-    @OneToOne(mappedBy = "blogCard")
+    @OneToOne
+    @JoinColumn(name = "blogArticle_id")
     private BlogArticle blogArticle;
 
 

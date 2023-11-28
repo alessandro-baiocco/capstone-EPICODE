@@ -5,7 +5,7 @@ import application.capstone.entities.User;
 import application.capstone.enums.Genere;
 import application.capstone.enums.Role;
 import application.capstone.exceptions.BadRequestException;
-import application.capstone.exceptions.NotUserFoundException;
+import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PutUserDTO;
 import application.capstone.repositories.UserRepository;
@@ -17,7 +17,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -31,11 +33,11 @@ public class UserService {
 
     public User findByEmail(String email){
         return userRepo.findByEmail(email)
-                .orElseThrow(() -> new NotUserFoundException("Utente con email " + email + " non trovato!"));
+                .orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
     public User findByUserName(String userName){
         return userRepo.findByUserName(userName)
-                .orElseThrow(() -> new NotUserFoundException("Utente con userName " + userName + " non trovato!"));
+                .orElseThrow(() -> new NotFoundException("Utente con userName " + userName + " non trovato!"));
     }
 
 
@@ -74,13 +76,14 @@ public class UserService {
             }
 
         }
+        newUser.setComments(new ArrayList<>());
 
 
         return userRepo.save(newUser);
     }
 
 
-    public User findByIdAndUpdate(int id , PutUserDTO body) throws NotUserFoundException{
+    public User findByIdAndUpdate(UUID id , PutUserDTO body) throws NotFoundException{
         User found = findById(id);
         if (found.getAvatar().equals("https://ui-avatars.com/api/?name=" + found.getNome().replace(" " , "") + "+" + found.getCognome().replace(" " , ""))){
             found.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" " , "") + "+" + body.cognome().replace(" " , ""));
@@ -102,8 +105,8 @@ public class UserService {
 
 
 
-    public User findById(int id) throws NotUserFoundException{
-        return userRepo.findById(id).orElseThrow(() -> new NotUserFoundException(id));
+    public User findById(UUID id) throws NotFoundException{
+        return userRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
 
@@ -118,7 +121,7 @@ public class UserService {
 
 
 
-    public void findByIdAndDelete(int id) throws NotUserFoundException{
+    public void findByIdAndDelete(UUID id) throws NotFoundException{
         User found = findById(id);
         userRepo.delete(found);
     }
