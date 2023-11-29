@@ -32,7 +32,7 @@ public class BlogArticleService {
         newBlog.setSvillupatore(body.svillupatore());
         newBlog.setPubblicazione(body.pubblicazione());
         try {
-            newBlog.setTema(Tema.valueOf(body.tema()));
+            newBlog.setTema(body.tema());
         }catch (IllegalArgumentException ex){
             throw new BadRequestException("tema non valido");
         }
