@@ -27,8 +27,6 @@ public record PUTBlogArticleDTO(@NotEmpty(message = "Il titolo è un campo obbli
                                 String consigli,
                                 @NotEmpty(message = "inserire almeno un genere o più separtati da ',' è un campo obbligatorio!")
                                 @Size(min = 4, max=16, message = "inserire almeno un genere massimo 3 ")
-                                String genere,
-                                @NotNull
-                                int pegi
+                                String genere
 ) {
 }

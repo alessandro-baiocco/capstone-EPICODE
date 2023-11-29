@@ -12,6 +12,8 @@ import java.util.Set;
 public class EnumTests {
 
 
+
+    //piccolo esperimento per comprendere meglio come funziona il valueOf()
     @ParameterizedTest
     @CsvSource({ "sparatutto, ROUGELIKE, ZOMBIE","ROUGELIKE , ROUGELIKE, ZOMBIE", "3, 3, 6"})
     void testListEnum(String str ){

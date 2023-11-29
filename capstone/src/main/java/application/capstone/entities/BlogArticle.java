@@ -29,8 +29,14 @@ public class BlogArticle {
     private String pubblicazione;
     @Enumerated(EnumType.STRING)
     private Tema tema;
+    @Lob
+    @Column(name = "storia", columnDefinition="VARCHAR(500)")
     private String storia;
+    @Lob
+    @Column(name = "esperienza", columnDefinition="VARCHAR(500)")
     private String esperienza;
+    @Lob
+    @Column(name = "consigli", columnDefinition="VARCHAR(500)")
     private String consigli;
     @OneToMany
     private List<Comment> comments;
@@ -78,5 +84,18 @@ public class BlogArticle {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public String toString() {
+        return "BlogArticle{"+ id +
+               genresList +
+                ", titolo='" + titolo + '\'' +
+                ", svillupatore='" + svillupatore + '\'' +
+                ", pubblicazione='" + pubblicazione + '\'' +
+                ", tema=" + tema +
+                ", storia='" + storia + '\'' +
+                ", esperienza='" + esperienza + '\'' +
+                ", consigli='" + consigli;
     }
 }

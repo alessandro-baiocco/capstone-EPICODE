@@ -36,7 +36,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
     public User findByUserName(String userName){
-        return userRepo.findByUserName(userName)
+        return userRepo.findByUsername(userName)
                 .orElseThrow(() -> new NotFoundException("Utente con userName " + userName + " non trovato!"));
     }
 
@@ -50,7 +50,7 @@ public class UserService {
                 throw new RuntimeException(e);
             }
         });
-        userRepo.findByUserName(body.userName()).ifPresent( user -> {
+        userRepo.findByUsername(body.userName()).ifPresent( user -> {
             try {
                 throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
             } catch (BadRequestException e) {

@@ -21,6 +21,8 @@ public class BlogArticleService {
 
     @Autowired
     private BlogArticleRepository blogArticleRepo;
+    @Autowired
+    private BlogCardService blogCardService;
 
     public BlogArticle save(NewBlogArticleDTO body) {
 
@@ -54,8 +56,10 @@ public class BlogArticleService {
 
         newBlog.setComments(new ArrayList<>());
 
+        BlogArticle savedBlog = blogArticleRepo.save(newBlog);
+        blogCardService.save(savedBlog , body.desciption());
 
-        return blogArticleRepo.save(newBlog);
+        return savedBlog;
     }
 
 
@@ -66,7 +70,7 @@ public class BlogArticleService {
         newBlog.setSvillupatore(body.svillupatore());
         newBlog.setPubblicazione(body.pubblicazione());
         try {
-            newBlog.setTema(Tema.valueOf(body.tema()));
+            newBlog.setTema(Tema.valueOf(body.tema().trim().toUpperCase()));
         }catch (IllegalArgumentException ex){
             throw new BadRequestException("tema non valido");
         }
@@ -80,7 +84,7 @@ public class BlogArticleService {
 
         for (String s : generi) {
             try {
-                generiSet.add(Genere.valueOf(s));
+                generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
             } catch (IllegalArgumentException ex) {
                 throw new BadRequestException("genere " + s + " non valido");
             }
@@ -89,6 +93,8 @@ public class BlogArticleService {
         newBlog.setGenresList(generiSet);
 
         newBlog.setComments(new ArrayList<>());
+
+
 
 
         return blogArticleRepo.save(newBlog);

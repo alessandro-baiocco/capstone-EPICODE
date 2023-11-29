@@ -17,12 +17,26 @@ public class BlogCard {
     private UUID id;
     private String titolo;
     @Enumerated(EnumType.STRING)
-    private List<Genere> genresList;
+    private Genere genere;
     private String description;
     @OneToOne
     @JoinColumn(name = "blogArticle_id")
     private BlogArticle blogArticle;
 
 
+    public void setTitolo(String titolo) {
+        this.titolo = titolo;
+    }
 
+    public void setGenere(Genere genere) {
+        this.genere = genere;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBlogArticle(BlogArticle blogArticle) {
+        this.blogArticle = blogArticle;
+    }
 }
