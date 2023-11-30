@@ -1,13 +1,11 @@
 package application.capstone.service;
 
+import application.capstone.entities.BlogArticle;
 import application.capstone.entities.Comment;
 import application.capstone.entities.User;
-import application.capstone.enums.Genere;
-import application.capstone.enums.Role;
-import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.CommentDTO;
-import application.capstone.payloads.PutCommentDTO;
+import application.capstone.payloads.PUTCommentDTO;
 import application.capstone.repositories.CommentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,7 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -26,28 +24,27 @@ public class CommentService {
     @Autowired
     private CommentsRepository commentsRepo;
     @Autowired
-    private UserService userService;
+    private BlogArticleService blogArticleService;
+    @Autowired
+    private UserService  userService;
 
 
 
-    public Comment save(CommentDTO body , UUID userID) {
+    public Comment save(CommentDTO body , User user) throws IOException {
 
-        User user = userService.findById(userID);
+        BlogArticle blogArticle = blogArticleService.findById(body.blog());
 
         Comment newComment = new Comment();
 
-        newComment.setComment(body.comment());
         newComment.setUser(user);
-
-
-
-
+        newComment.setComment(body.comment());
+        newComment.setBlogArticle(blogArticle);
 
         return commentsRepo.save(newComment);
     }
 
 
-    public Comment findByIdAndUpdate(UUID id , PutCommentDTO body) throws NotFoundException{
+    public Comment findByIdAndUpdate(UUID id , PUTCommentDTO body) throws NotFoundException , IOException{
         Comment found = findById(id);
 
         found.setComment(body.comment());

@@ -3,7 +3,7 @@ package application.capstone.payloads;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public record PutUserDTO(@NotEmpty(message = "Il nome è un campo obbligatorio!")
+public record PUTUserDTO(@NotEmpty(message = "Il nome è un campo obbligatorio!")
                           @Size(min = 3, max=30, message = "Il nome deve essere compreso tra 3 e 30 caratteri")
                           String nome,
                          @NotEmpty(message = "Il cognome è un campo obbligatorio!")
