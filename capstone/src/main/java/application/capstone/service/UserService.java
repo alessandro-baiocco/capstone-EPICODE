@@ -7,7 +7,7 @@ import application.capstone.enums.Role;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewUserDTO;
-import application.capstone.payloads.PutUserDTO;
+import application.capstone.payloads.PUTUserDTO;
 import application.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 
@@ -42,7 +41,7 @@ public class UserService {
 
 
 
-    public User save(NewUserDTO body) {
+    public User save(NewUserDTO body) throws IOException {
         userRepo.findByEmail(body.email()).ifPresent( user -> {
             try {
                 throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
@@ -83,7 +82,7 @@ public class UserService {
     }
 
 
-    public User findByIdAndUpdate(UUID id , PutUserDTO body) throws NotFoundException{
+    public User findByIdAndUpdate(UUID id , PUTUserDTO body) throws NotFoundException , IOException{
         User found = findById(id);
         if (found.getAvatar().equals("https://ui-avatars.com/api/?name=" + found.getNome().replace(" " , "") + "+" + found.getCognome().replace(" " , ""))){
             found.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" " , "") + "+" + body.cognome().replace(" " , ""));
