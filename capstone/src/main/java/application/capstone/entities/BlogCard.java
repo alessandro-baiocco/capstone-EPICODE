@@ -1,6 +1,7 @@
 package application.capstone.entities;
 
 import application.capstone.enums.Genere;
+import application.capstone.enums.Tema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class BlogCard {
     private UUID id;
     private String titolo;
     @Enumerated(EnumType.STRING)
-    private Genere genere;
+    private Tema tema;
     private String description;
     @OneToOne
     @JoinColumn(name = "blogArticle_id")
@@ -28,8 +29,8 @@ public class BlogCard {
         this.titolo = titolo;
     }
 
-    public void setGenere(Genere genere) {
-        this.genere = genere;
+    public void setGenere(Tema tema) {
+        this.tema = tema;
     }
 
     public void setDescription(String description) {

@@ -40,6 +40,8 @@ public class BlogArticle {
     private String consigli;
     @OneToMany
     private List<Comment> comments;
+    @OneToOne
+    private BlogCard blogCard;
 
 
     public void setImmaginePrimaria(String immaginePrimaria) {

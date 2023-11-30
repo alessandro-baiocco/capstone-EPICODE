@@ -2,6 +2,7 @@ package application.capstone.service;
 
 import application.capstone.entities.BlogArticle;
 
+import application.capstone.entities.BlogCard;
 import application.capstone.enums.Genere;
 
 import application.capstone.enums.Tema;
@@ -12,6 +13,7 @@ import application.capstone.payloads.NewBlogArticleDTO;
 import application.capstone.payloads.PUTBlogArticleDTO;
 
 import application.capstone.repositories.BlogArticleRepository;
+import application.capstone.repositories.BlogCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +32,7 @@ public class BlogArticleService {
     @Autowired
     private BlogArticleRepository blogArticleRepo;
     @Autowired
-    private BlogCardService blogCardService;
+    private BlogCardRepository blogCardRepo;
 
     public BlogArticle save(NewBlogArticleDTO body) throws IOException {
 
@@ -48,7 +50,6 @@ public class BlogArticleService {
         newBlog.setStoria(body.storia());
         newBlog.setEsperienza(body.esperienza());
         newBlog.setConsigli(body.consigli());
-
         String[] generi = body.genere().split(",");
         Set<Genere> generiSet = new HashSet<>();
 
@@ -61,11 +62,17 @@ public class BlogArticleService {
         }
 
         newBlog.setGenresList(generiSet);
-
         newBlog.setComments(new ArrayList<>());
 
         BlogArticle savedBlog = blogArticleRepo.save(newBlog);
-        blogCardService.save(savedBlog , body.desciption());
+        BlogCard newBlogCard = new BlogCard();
+
+        newBlogCard.setTitolo(savedBlog.getTitolo());
+        newBlogCard.setGenere(savedBlog.getTema());
+        newBlogCard.setDescription(body.desciption());
+        newBlogCard.setBlogArticle(savedBlog);
+
+        blogCardRepo.save(newBlogCard);
 
         return savedBlog;
     }
@@ -116,7 +123,10 @@ public class BlogArticleService {
 
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         BlogArticle found = findById(id);
+        BlogCard foundCard = found.getBlogCard();
+        blogCardRepo.delete(foundCard);
         blogArticleRepo.delete(found);
+
     }
 
     public Page<BlogArticle> getAllArticle(int page , int size , String order){
