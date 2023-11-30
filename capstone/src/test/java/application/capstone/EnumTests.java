@@ -1,12 +1,15 @@
 package application.capstone;
 
 import application.capstone.enums.Genere;
+import application.capstone.enums.Tema;
 import application.capstone.exceptions.BadRequestException;
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class EnumTests {
@@ -39,4 +42,19 @@ public class EnumTests {
 
 
 
+    @ParameterizedTest
+    @CsvSource({ "FANTASCIENTIFICO","POSTAPOCALITTICO"})
+    public void isValid(String str) {
+        Tema tema = Tema.valueOf(str);
+        List<Tema> temi = Arrays.stream(Tema.values()).toList();
+        System.out.println(temi.contains(tema));
+    } // testo la validation class 
 }
+
+
+
+
+
+
+
+

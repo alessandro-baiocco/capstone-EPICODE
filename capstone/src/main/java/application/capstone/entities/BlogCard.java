@@ -23,6 +23,7 @@ public class BlogCard {
     @OneToOne
     @JoinColumn(name = "blogArticle_id")
     private BlogArticle blogArticle;
+    private String cover;
 
 
     public void setTitolo(String titolo) {
@@ -39,5 +40,13 @@ public class BlogCard {
 
     public void setBlogArticle(BlogArticle blogArticle) {
         this.blogArticle = blogArticle;
+    }
+
+    public void setTema(Tema tema) {
+        this.tema = tema;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
     }
 }
