@@ -14,14 +14,18 @@ import application.capstone.payloads.PUTBlogArticleDTO;
 
 import application.capstone.repositories.BlogArticleRepository;
 import application.capstone.repositories.BlogCardRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.*;
 
 public class BlogArticleService {
@@ -30,6 +34,8 @@ public class BlogArticleService {
     private BlogArticleRepository blogArticleRepo;
     @Autowired
     private BlogCardRepository blogCardRepo;
+    @Autowired
+    private Cloudinary cloudinary;
 
     public BlogArticle save(NewBlogArticleDTO body) {
 
@@ -125,6 +131,32 @@ public class BlogArticleService {
         blogArticleRepo.delete(found);
 
     }
+
+    public BlogArticle setPrimaryPicture(UUID id , MultipartFile file) throws IOException, NotFoundException {
+        BlogArticle found = findById(id);
+        BlogCard cardFound = found.getBlogCard();
+        String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setImmaginePrimaria(newImage);
+        cardFound.setCover(newImage);
+        blogCardRepo.save(cardFound);
+        return blogArticleRepo.save(found);
+    }
+
+    public BlogArticle setSecondaryPicture(UUID id , MultipartFile file) throws IOException, NotFoundException {
+        BlogArticle found = findById(id);
+        String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setImmagineSecondaria(newImage);
+        return blogArticleRepo.save(found);
+    }
+
+    public Page<BlogArticle> getAllArticle(int page , int size , String order){
+        Pageable pageable = PageRequest.of(page, size , Sort.by(order));
+        return blogArticleRepo.findAll(pageable);
+    }
+
+
+
+
 
 
 }
