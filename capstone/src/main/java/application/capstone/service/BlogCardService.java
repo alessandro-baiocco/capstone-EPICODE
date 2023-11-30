@@ -3,6 +3,7 @@ package application.capstone.service;
 import application.capstone.entities.BlogArticle;
 import application.capstone.entities.BlogCard;
 import application.capstone.enums.Genere;
+import application.capstone.enums.Tema;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.PutBlogCardDTO;
@@ -27,7 +28,7 @@ public class BlogCardService {
         BlogCard newBlogCard = new BlogCard();
 
         newBlogCard.setTitolo(blogArticle.getTitolo());
-        newBlogCard.setGenere(blogArticle.getGenresList().stream().toList().get(0));
+        newBlogCard.setGenere(blogArticle.getTema());
         newBlogCard.setDescription(description);
         newBlogCard.setBlogArticle(blogArticle);
 
@@ -40,7 +41,7 @@ public class BlogCardService {
 
         found.setTitolo(body.titolo());
         try {
-            found.setGenere(Genere.valueOf(body.genere()));
+            found.setGenere(Tema.valueOf(body.genere()));
         }catch (IllegalArgumentException ex){
             throw new BadRequestException("genere " + body.genere() +  " non valido");
         }
@@ -57,16 +58,10 @@ public class BlogCardService {
     }
 
 
-
-
     public Page<BlogCard> getAllBlogCard(int page , int size , String order){
         Pageable pageable = PageRequest.of(page, size , Sort.by(order));
         return cardRepo.findAll(pageable);
     }
-
-
-
-
 
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         BlogCard found = findById(id);
