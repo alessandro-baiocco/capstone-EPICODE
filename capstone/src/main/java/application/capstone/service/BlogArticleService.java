@@ -140,6 +140,7 @@ public class BlogArticleService {
         String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         found.setImmaginePrimaria(newImage);
         cardFound.setCover(newImage);
+
         blogCardRepo.save(cardFound);
         return blogArticleRepo.save(found);
     }

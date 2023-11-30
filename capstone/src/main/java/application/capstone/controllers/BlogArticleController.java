@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,6 +81,19 @@ public class BlogArticleController {
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         blogArticleService.findByIdAndDelete(id);
     }
+
+
+
+    @PatchMapping("/{id}/primary")
+    public BlogArticle changePrimaryPicture(@PathVariable UUID id , @RequestParam("picture") MultipartFile body) throws NotFoundException , IOException{
+       return blogArticleService.setPrimaryPicture(id , body);
+    }
+    @PatchMapping("/{id}/secondary")
+    public BlogArticle changeSecondaryPicture(@PathVariable UUID id , @RequestParam("picture") MultipartFile body) throws NotFoundException , IOException{
+        return blogArticleService.setSecondaryPicture(id , body);
+    }
+
+
 
 
 }
