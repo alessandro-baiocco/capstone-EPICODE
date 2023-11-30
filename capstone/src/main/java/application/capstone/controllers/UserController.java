@@ -37,21 +37,7 @@ public class UserController {
 
 
 
-    @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
-    public User save(@RequestBody @Validated NewUserDTO body , BindingResult validation) {
-        if(validation.hasErrors()){
-            throw new BadRequestException(validation.getAllErrors());
-        } else {
-            try {
-                return userService.save(body);
-            }catch (IOException e){
-                throw new RuntimeException("problema lato server");
-            }
 
-        }
-
-    }
 
     @PutMapping("/{id}")
     public User findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated PUTUserDTO body , BindingResult validation) throws NotFoundException {
