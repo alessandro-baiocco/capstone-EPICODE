@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/cards")
+@RequestMapping("/public/cards")
 public class BlogCardController {
     @Autowired
     private BlogCardService blogCardService;

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/comments")
+@RequestMapping("/private/comments")
 public class CommentController {
 
     @Autowired

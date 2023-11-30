@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/private/users")
 public class UserController {
 
     @Autowired
