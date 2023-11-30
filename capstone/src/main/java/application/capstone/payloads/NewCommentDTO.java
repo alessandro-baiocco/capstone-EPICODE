@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.UUID;
 
-public record CommentDTO (
+public record NewCommentDTO(
         @NotNull(message = "l'id del blog è un campo obbligatorio")
         UUID blog,
         @NotEmpty(message = "il testo del messaggio è un campo obbligatorio")

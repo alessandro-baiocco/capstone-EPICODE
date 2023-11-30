@@ -3,7 +3,7 @@ package application.capstone.payloads;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
-public record PutBlogCardDTO(
+public record PUTBlogCardDTO(
         @NotEmpty(message = "Il titolo è un campo obbligatorio!")
         @Size(min = 1, max=10, message = "Il titolo deve essere compreso tra 1 e 10 caratteri")
         String titolo,

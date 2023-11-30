@@ -4,7 +4,7 @@ import application.capstone.entities.BlogArticle;
 import application.capstone.entities.Comment;
 import application.capstone.entities.User;
 import application.capstone.exceptions.NotFoundException;
-import application.capstone.payloads.CommentDTO;
+import application.capstone.payloads.NewCommentDTO;
 import application.capstone.payloads.PUTCommentDTO;
 import application.capstone.repositories.CommentsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class CommentService {
 
 
 
-    public Comment save(CommentDTO body , User user) throws IOException {
+    public Comment save(NewCommentDTO body , User user) throws IOException {
 
         BlogArticle blogArticle = blogArticleService.findById(body.blog());
 

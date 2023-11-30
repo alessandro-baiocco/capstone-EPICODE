@@ -5,7 +5,7 @@ import application.capstone.entities.User;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 
-import application.capstone.payloads.CommentDTO;
+import application.capstone.payloads.NewCommentDTO;
 import application.capstone.payloads.PUTCommentDTO;
 import application.capstone.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CommentController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public Comment save(@RequestBody @Validated CommentDTO body , BindingResult validation , @AuthenticationPrincipal User currentUser) {
+    public Comment save(@RequestBody @Validated NewCommentDTO body , BindingResult validation , @AuthenticationPrincipal User currentUser) {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {

@@ -5,7 +5,7 @@ import application.capstone.entities.BlogCard;
 import application.capstone.enums.Genere;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
-import application.capstone.payloads.PutBlogCardDTO;
+import application.capstone.payloads.PUTBlogCardDTO;
 import application.capstone.repositories.BlogCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
@@ -35,7 +36,7 @@ public class BlogCardService {
     }
 
 
-    public BlogCard findByIdAndUpdate(UUID id , PutBlogCardDTO body) throws NotFoundException {
+    public BlogCard findByIdAndUpdate(UUID id , PUTBlogCardDTO body) throws NotFoundException , IOException {
         BlogCard found = findById(id);
 
         found.setTitolo(body.titolo());
