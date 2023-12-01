@@ -3,6 +3,7 @@ package application.capstone.service;
 import application.capstone.entities.BlogArticle;
 
 import application.capstone.entities.BlogCard;
+import application.capstone.entities.User;
 import application.capstone.enums.Genere;
 
 import application.capstone.enums.Tema;
@@ -37,11 +38,16 @@ public class BlogArticleService {
     @Autowired
     private BlogCardRepository blogCardRepo;
     @Autowired
+    private UserService userService;
+    @Autowired
     private Cloudinary cloudinary;
 
     public BlogArticle save(NewBlogArticleDTO body) throws IOException {
 
         BlogArticle newBlog = new BlogArticle();
+
+        User userBlog = userService.findById(body.user());
+
 
         newBlog.setTitolo(body.titolo());
         newBlog.setSvillupatore(body.svillupatore());
@@ -68,6 +74,7 @@ public class BlogArticleService {
 
         newBlog.setGenresList(generiSet);
         newBlog.setComments(new ArrayList<>());
+        newBlog.setUser(userBlog);
 
         BlogArticle savedBlog = blogArticleRepo.save(newBlog);
         BlogCard newBlogCard = new BlogCard();
@@ -89,11 +96,8 @@ public class BlogArticleService {
         found.setTitolo(body.titolo());
         found.setSvillupatore(body.svillupatore());
         found.setPubblicazione(body.pubblicazione());
-        try {
-            found.setTema(Tema.valueOf(body.tema().trim().toUpperCase()));
-        }catch (IllegalArgumentException ex){
-            throw new BadRequestException("tema non valido");
-        }
+
+        found.setTema(body.tema());
 
         found.setStoria(body.storia());
         found.setEsperienza(body.esperienza());

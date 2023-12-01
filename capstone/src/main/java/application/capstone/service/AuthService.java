@@ -61,11 +61,10 @@ public class AuthService {
 
         User newUser = new User();
 
-
         newUser.setCognome(body.cognome());
         newUser.setNome(body.nome());
         newUser.setUsername(body.userName());
-        newUser.setPassword(body.password());
+        newUser.setPassword(bcrypt.encode(body.password()));
         newUser.setEmail(body.email());
         newUser.setRuolo(Role.USER);
 

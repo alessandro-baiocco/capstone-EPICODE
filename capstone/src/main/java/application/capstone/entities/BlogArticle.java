@@ -91,6 +91,10 @@ public class BlogArticle {
         this.comments = comments;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "BlogArticle{"+ id +

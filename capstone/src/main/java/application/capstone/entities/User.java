@@ -2,6 +2,7 @@ package application.capstone.entities;
 
 import application.capstone.enums.Genere;
 import application.capstone.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,9 @@ public class User implements UserDetails {
     private String email;
     @Enumerated(EnumType.STRING)
     private Role ruolo;
+    @JsonIgnore
+    @OneToMany
+    private List<BlogArticle> blogs;
 
 
     public void setNome(String nome) {

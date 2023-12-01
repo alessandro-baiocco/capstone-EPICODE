@@ -1,5 +1,6 @@
 package application.capstone.payloads;
 
+import application.capstone.enums.Tema;
 import application.capstone.validatorEnums.TemaEnumValidator;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +17,7 @@ public record PUTBlogArticleDTO(@NotEmpty(message = "Il titolo è un campo obbli
                                 String pubblicazione,
                                 @NotNull(message = "il tema è un campo obbligatorio")
                                 @TemaEnumValidator
-                                String tema,
+                                Tema tema,
                                 @NotEmpty(message = "la storia è un campo obbligatorio!")
                                 @Size(min = 20, max=600, message = "la storia deve essere compreso tra 20 e 600 caratteri")
                                 String storia,
