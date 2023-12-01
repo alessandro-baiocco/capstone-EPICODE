@@ -42,6 +42,9 @@ public class BlogArticle {
     private List<Comment> comments;
     @OneToOne
     private BlogCard blogCard;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user ;
 
 
     public void setImmaginePrimaria(String immaginePrimaria) {

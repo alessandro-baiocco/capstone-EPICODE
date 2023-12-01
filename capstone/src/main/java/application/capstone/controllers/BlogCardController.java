@@ -22,14 +22,6 @@ public class BlogCardController {
     private BlogCardService blogCardService;
 
 
-    @GetMapping("")
-    public Page<BlogCard> getAllArticle(@RequestParam(defaultValue = "0")int page ,
-                                        @RequestParam(defaultValue = "10")int size,
-                                        @RequestParam(defaultValue = "id")String order){
-        return blogCardService.getAllBlogCard(page , size , order);
-    }
-
-
 
 
 
@@ -45,14 +37,6 @@ public class BlogCardController {
             }
         }
     }
-
-
-
-    @GetMapping("/{id}")
-    public BlogCard findById(@PathVariable UUID id) throws NotFoundException{
-        return blogCardService.findById(id);
-    }
-
 
 
 
