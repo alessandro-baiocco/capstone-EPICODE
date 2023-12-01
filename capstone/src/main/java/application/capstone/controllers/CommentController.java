@@ -70,6 +70,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         commentService.findByIdAndDelete(id);

@@ -62,6 +62,7 @@ public class AuthService {
         User newUser = new User();
 
         newUser.setCognome(body.cognome());
+        newUser.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" " , "") + "+" + body.cognome().replace(" " , ""));
         newUser.setNome(body.nome());
         newUser.setUsername(body.userName());
         newUser.setPassword(bcrypt.encode(body.password()));

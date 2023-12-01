@@ -29,7 +29,7 @@ public class BlogCardService {
         BlogCard newBlogCard = new BlogCard();
 
         newBlogCard.setTitolo(blogArticle.getTitolo());
-        newBlogCard.setGenere(blogArticle.getTema());
+        newBlogCard.setTema(blogArticle.getTema());
         newBlogCard.setDescription(description);
         newBlogCard.setBlogArticle(blogArticle);
 
@@ -42,7 +42,7 @@ public class BlogCardService {
 
         found.setTitolo(body.titolo());
         try {
-            found.setGenere(Tema.valueOf(body.genere()));
+            found.setTema(Tema.valueOf(body.genere()));
         }catch (IllegalArgumentException ex){
             throw new BadRequestException("genere " + body.genere() +  " non valido");
         }

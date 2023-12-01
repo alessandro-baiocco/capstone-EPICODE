@@ -28,7 +28,7 @@ public class PublicContentController {
         return blogArticleService.getAllArticle(page , size , order);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/articles/{id}")
     public BlogArticle findArticleById(@PathVariable UUID id) throws NotFoundException {
         return blogArticleService.findById(id);
     }

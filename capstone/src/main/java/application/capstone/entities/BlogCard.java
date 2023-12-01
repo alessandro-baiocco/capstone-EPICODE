@@ -30,9 +30,6 @@ public class BlogCard {
         this.titolo = titolo;
     }
 
-    public void setGenere(Tema tema) {
-        this.tema = tema;
-    }
 
     public void setDescription(String description) {
         this.description = description;

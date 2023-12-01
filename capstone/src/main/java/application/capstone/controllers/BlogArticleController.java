@@ -25,8 +25,8 @@ public class BlogArticleController {
 
 
     @PostMapping("")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CREATOR')")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('CREATOR', 'ADMIN')")
     public BlogArticle save(@RequestBody @Validated NewBlogArticleDTO body ,  BindingResult validation) {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
@@ -56,8 +56,8 @@ public class BlogArticleController {
 
 
 
-
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         blogArticleService.findByIdAndDelete(id);

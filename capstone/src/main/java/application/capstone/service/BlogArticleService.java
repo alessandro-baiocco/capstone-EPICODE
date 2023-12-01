@@ -75,14 +75,17 @@ public class BlogArticleService {
         newBlog.setGenresList(generiSet);
         newBlog.setComments(new ArrayList<>());
         newBlog.setUser(userBlog);
+        newBlog.setImmaginePrimaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
+        newBlog.setImmagineSecondaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
 
         BlogArticle savedBlog = blogArticleRepo.save(newBlog);
         BlogCard newBlogCard = new BlogCard();
 
         newBlogCard.setTitolo(savedBlog.getTitolo());
-        newBlogCard.setGenere(savedBlog.getTema());
-        newBlogCard.setDescription(body.desciption());
+        newBlogCard.setTema(savedBlog.getTema());
+        newBlogCard.setDescription(body.descrizione());
         newBlogCard.setBlogArticle(savedBlog);
+        newBlogCard.setCover("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
 
         blogCardRepo.save(newBlogCard);
 
@@ -132,8 +135,6 @@ public class BlogArticleService {
 
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         BlogArticle found = findById(id);
-        BlogCard foundCard = found.getBlogCard();
-        blogCardRepo.delete(foundCard);
         blogArticleRepo.delete(found);
 
     }

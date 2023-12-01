@@ -38,7 +38,7 @@ public record NewBlogArticleDTO(
         String genere,
         @NotEmpty(message = "una breve descrizione è un campo obbligatorio!")
         @Size(min = 10, max=30, message = "la descrizione deve essere lunga tra i 10 e i 30 caratteri")
-        String desciption,
+        String descrizione,
         @NotNull(message = "l'id utente è un campo obbligatorio!")
         UUID user
 ) {
