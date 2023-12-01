@@ -1,7 +1,9 @@
 package application.capstone.security;
 
 import application.capstone.entities.User;
+import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.UnauthorizedException;
+import application.capstone.repositories.UserRepository;
 import application.capstone.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -16,6 +18,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -23,7 +26,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
     private JWTTools jwtTools;
     @Autowired
-    private UserService usersService;
+    private UserRepository usersRepo;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -35,7 +38,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             jwtTools.verifyToken(token);
 
             String id = jwtTools.extractIdFromToken(token);
-            User currentUser = usersService.findById(UUID.fromString(id));
+            User currentUser = usersRepo.findById(UUID.fromString(id)).orElseThrow(() -> new BadRequestException("utente non trovato rifare il token"));
 
 
             Authentication authentication  = new UsernamePasswordAuthenticationToken(currentUser , null ,  currentUser.getAuthorities());
