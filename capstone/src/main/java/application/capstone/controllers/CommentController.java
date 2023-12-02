@@ -52,12 +52,12 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Comment findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated PUTCommentDTO body , BindingResult validation) throws NotFoundException {
+    public Comment findByIdAndUpdate(@PathVariable UUID id  ,@AuthenticationPrincipal User currentUser , @RequestBody @Validated PUTCommentDTO body , BindingResult validation) throws NotFoundException {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return commentService.findByIdAndUpdate(id , body);
+                return commentService.findByIdAndUpdate(currentUser.getId(), id , body);
             }catch (IOException e){
                 throw new RuntimeException("problema lato server");
             }

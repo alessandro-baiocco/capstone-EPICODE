@@ -59,7 +59,7 @@ public class UserController {
     };
 
     @PutMapping("/me")
-    public User getProfile(@AuthenticationPrincipal User currentUser, @RequestBody PUTUserDTO body){
+    public User putMyProfile(@AuthenticationPrincipal User currentUser, @RequestBody PUTUserDTO body){
         try {
             return userService.findByIdAndUpdate(currentUser.getId(), body);
         }catch (IOException e){
@@ -70,7 +70,7 @@ public class UserController {
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getProfile(@AuthenticationPrincipal User currentUser){
+    public void deleteMyProfile(@AuthenticationPrincipal User currentUser){
         userService.findByIdAndDelete(currentUser.getId());
     };
 

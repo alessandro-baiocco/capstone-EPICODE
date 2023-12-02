@@ -6,6 +6,7 @@ import application.capstone.entities.BlogCard;
 import application.capstone.entities.User;
 import application.capstone.enums.Genere;
 
+import application.capstone.enums.Role;
 import application.capstone.enums.Tema;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
@@ -93,36 +94,38 @@ public class BlogArticleService {
     }
 
 
-    public BlogArticle findByIdAndUpdate(UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
+    public BlogArticle findByIdAndUpdate(User user, UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
+
         BlogArticle found = findById(id);
 
-        found.setTitolo(body.titolo());
-        found.setSvillupatore(body.svillupatore());
-        found.setPubblicazione(body.pubblicazione());
+        if(found.getUser().getId() == user.getId() || user.getRuolo() == Role.ADMIN){
+            found.setTitolo(body.titolo());
+            found.setSvillupatore(body.svillupatore());
+            found.setPubblicazione(body.pubblicazione());
 
-        found.setTema(body.tema());
+            found.setTema(body.tema());
 
-        found.setStoria(body.storia());
-        found.setEsperienza(body.esperienza());
-        found.setConsigli(body.consigli());
+            found.setStoria(body.storia());
+            found.setEsperienza(body.esperienza());
+            found.setConsigli(body.consigli());
 
-        String[] generi = body.genere().split(",");
-        Set<Genere> generiSet = new HashSet<>();
+            String[] generi = body.genere().split(",");
+            Set<Genere> generiSet = new HashSet<>();
 
-        for (String s : generi) {
-            try {
-                generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
-            } catch (IllegalArgumentException ex) {
-                throw new BadRequestException("genere " + s + " non valido");
+            for (String s : generi) {
+                try {
+                    generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
+                } catch (IllegalArgumentException ex) {
+                    throw new BadRequestException("genere " + s + " non valido");
+                }
             }
+
+            found.setGenresList(generiSet);
+
+            found.setComments(new ArrayList<>());
+        }else {
+            throw new BadRequestException("il post non è tuo non puoi cambiarlo");
         }
-
-        found.setGenresList(generiSet);
-
-        found.setComments(new ArrayList<>());
-
-
-
 
         return blogArticleRepo.save(found);
     }

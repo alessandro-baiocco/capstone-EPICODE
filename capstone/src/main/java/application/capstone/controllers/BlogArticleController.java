@@ -1,6 +1,7 @@
 package application.capstone.controllers;
 
 import application.capstone.entities.BlogArticle;
+import application.capstone.entities.User;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewBlogArticleDTO;
@@ -9,6 +10,8 @@ import application.capstone.service.BlogArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,13 +44,16 @@ public class BlogArticleController {
 
     }
 
+
+
     @PutMapping("/{id}")
-    public BlogArticle findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated  PUTBlogArticleDTO body ,  BindingResult validation) throws NotFoundException {
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'CREATOR')")
+    public BlogArticle findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated  PUTBlogArticleDTO body , @AuthenticationPrincipal User currentUser  ,  BindingResult validation) throws NotFoundException {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-        return blogArticleService.findByIdAndUpdate(id , body);
+        return blogArticleService.findByIdAndUpdate(currentUser , id , body);
     }catch (IOException e){
                 throw new RuntimeException("problema lato server");
             }
