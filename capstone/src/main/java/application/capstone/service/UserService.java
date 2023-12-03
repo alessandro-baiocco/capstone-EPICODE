@@ -1,12 +1,13 @@
 package application.capstone.service;
 
-
 import application.capstone.entities.User;
 import application.capstone.enums.Genere;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.PUTUserDTO;
 import application.capstone.repositories.UserRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -26,6 +28,8 @@ public class UserService {
     private UserRepository userRepo;
     @Autowired
     private PasswordEncoder bcrypt;
+    @Autowired
+    private Cloudinary cloudinary;
 
 
 
@@ -81,6 +85,11 @@ public class UserService {
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         User found = findById(id);
         userRepo.delete(found);
+    }
+    public User setMyPicture(User user , MultipartFile file) throws IOException, NotFoundException {
+        String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        user.setAvatar(newImage);
+        return userRepo.save(user);
     }
 
 

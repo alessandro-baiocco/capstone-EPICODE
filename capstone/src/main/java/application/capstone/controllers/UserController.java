@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -75,6 +76,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMyProfile(@AuthenticationPrincipal User currentUser){
         userService.findByIdAndDelete(currentUser.getId());
+    };
+
+    @PatchMapping("/me/upload")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public User changeMyProfilePicture(@AuthenticationPrincipal User currentUser, @RequestParam("avatar") MultipartFile body ){
+        try {
+            return userService.setMyPicture(currentUser , body);
+        }catch (IOException e){
+            throw new RuntimeException("problema lato server");
+        }
+
     };
 
 
