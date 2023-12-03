@@ -34,7 +34,7 @@ public record NewBlogArticleDTO(
         @Size(min = 20, max=400, message = "il tema deve essere compreso tra 20 e 400 caratteri")
         String consigli,
         @NotEmpty(message = "inserire almeno un genere o più separtati da ',' è un campo obbligatorio!")
-        @Size(min = 4, max=16, message = "inserire almeno un genere massimo 3 ")
+        @Size(min = 4, message = "inserire almeno un genere")
         String genere,
         @NotEmpty(message = "una breve descrizione è un campo obbligatorio!")
         @Size(min = 10, max=30, message = "la descrizione deve essere lunga tra i 10 e i 30 caratteri")
