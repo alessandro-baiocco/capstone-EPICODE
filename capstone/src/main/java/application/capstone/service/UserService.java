@@ -2,9 +2,11 @@ package application.capstone.service;
 
 import application.capstone.entities.User;
 import application.capstone.enums.Genere;
+import application.capstone.enums.Role;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.PUTUserDTO;
+import application.capstone.payloads.RoleDTO;
 import application.capstone.repositories.UserRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -90,6 +92,13 @@ public class UserService {
         String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         user.setAvatar(newImage);
         return userRepo.save(user);
+    }
+
+
+    public User findByIdAndPromote(UUID userId , RoleDTO role)throws NotFoundException , IOException{
+        User found = findById(userId);
+        found.setRuolo(role.role());
+        return userRepo.save(found);
     }
 
 

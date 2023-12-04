@@ -8,9 +8,9 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = TemaValidator.class)
-public @interface TemaEnumValidator {
-    String message() default "Valore non valido per lo stato";
+@Constraint(validatedBy = RoleValidator.class)
+public @interface RoleEnumValidator {
+    String message() default "Valore non valido per il ruolo";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

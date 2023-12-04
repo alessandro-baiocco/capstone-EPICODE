@@ -6,6 +6,7 @@ import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PUTUserDTO;
+import application.capstone.payloads.RoleDTO;
 import application.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -101,6 +102,22 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         userService.findByIdAndDelete(id);
+    }
+
+
+
+    @PutMapping("promote/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User findByIdAndPromote(@PathVariable UUID id , @RequestBody @Validated RoleDTO body , BindingResult validation) throws NotFoundException {
+        if(validation.hasErrors()){
+            throw new BadRequestException(validation.getAllErrors());
+        } else {
+            try {
+                return userService.findByIdAndPromote(id , body);
+            }catch (IOException e){
+                throw new RuntimeException("problema lato server");
+            }
+        }
     }
 
 
