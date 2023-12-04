@@ -2,6 +2,8 @@ package application.capstone.entities;
 
 import application.capstone.enums.Genere;
 import application.capstone.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,21 +19,26 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
+@JsonIgnoreProperties({"password" , "comments", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue
     private UUID id;
     private String nome;
     private String cognome;
-    @OneToMany
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "user")
     private List<Comment> comments;
     private String password;
     private String avatar;
+    @Enumerated(EnumType.STRING)
     private Genere generePreferito;
     private String username;
     private String email;
     @Enumerated(EnumType.STRING)
     private Role ruolo;
+    @JsonIgnore
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "user")
+    private List<BlogArticle> blogs;
 
 
     public void setNome(String nome) {

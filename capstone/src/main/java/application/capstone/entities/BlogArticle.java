@@ -3,6 +3,7 @@ package application.capstone.entities;
 
 import application.capstone.enums.Genere;
 import application.capstone.enums.Tema;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,8 +41,12 @@ public class BlogArticle {
     private String consigli;
     @OneToMany
     private List<Comment> comments;
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(mappedBy = "blogArticle" , cascade = CascadeType.REMOVE)
     private BlogCard blogCard;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user ;
 
 
     public void setImmaginePrimaria(String immaginePrimaria) {
@@ -86,6 +91,14 @@ public class BlogArticle {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setBlogCard(BlogCard blogCard) {
+        this.blogCard = blogCard;
     }
 
     @Override

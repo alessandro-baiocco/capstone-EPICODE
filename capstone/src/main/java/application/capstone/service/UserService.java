@@ -1,23 +1,23 @@
 package application.capstone.service;
 
-
 import application.capstone.entities.User;
 import application.capstone.enums.Genere;
-import application.capstone.enums.Role;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
-import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PUTUserDTO;
 import application.capstone.repositories.UserRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.UUID;
 
 
@@ -26,6 +26,10 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepo;
+    @Autowired
+    private PasswordEncoder bcrypt;
+    @Autowired
+    private Cloudinary cloudinary;
 
 
 
@@ -41,45 +45,7 @@ public class UserService {
 
 
 
-    public User save(NewUserDTO body) throws IOException {
-        userRepo.findByEmail(body.email()).ifPresent( user -> {
-            try {
-                throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
-            } catch (BadRequestException e) {
-                throw new RuntimeException(e);
-            }
-        });
-        userRepo.findByUsername(body.userName()).ifPresent( user -> {
-            try {
-                throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
-            } catch (BadRequestException e) {
-                throw new RuntimeException(e);
-            }
-        });
 
-        User newUser = new User();
-
-
-        newUser.setCognome(body.cognome());
-        newUser.setNome(body.nome());
-        newUser.setUsername(body.userName());
-        newUser.setPassword(body.password());
-        newUser.setEmail(body.email());
-        newUser.setRuolo(Role.USER);
-
-        if(body.generePreferito() != null){
-            try {
-                newUser.setGenerePreferito(Genere.valueOf(body.generePreferito().toUpperCase()));
-            }catch ( IllegalArgumentException ex){
-                throw new BadRequestException("genere non valido");
-            }
-
-        }
-        newUser.setComments(new ArrayList<>());
-
-
-        return userRepo.save(newUser);
-    }
 
 
     public User findByIdAndUpdate(UUID id , PUTUserDTO body) throws NotFoundException , IOException{
@@ -89,7 +55,7 @@ public class UserService {
         }
         found.setNome(body.nome());
         found.setCognome(body.cognome());
-        found.setPassword(body.password());
+        found.setPassword(bcrypt.encode(body.password()));
         found.setUsername(body.userName());
         if(body.generePreferito() != null){
             try {
@@ -116,13 +82,14 @@ public class UserService {
         return userRepo.findAll(pageable);
     }
 
-
-
-
-
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         User found = findById(id);
         userRepo.delete(found);
+    }
+    public User setMyPicture(User user , MultipartFile file) throws IOException, NotFoundException {
+        String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        user.setAvatar(newImage);
+        return userRepo.save(user);
     }
 
 

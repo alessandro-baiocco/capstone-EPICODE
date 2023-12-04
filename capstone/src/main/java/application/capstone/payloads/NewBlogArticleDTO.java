@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 public record NewBlogArticleDTO(
         @NotEmpty(message = "Il titolo è un campo obbligatorio!")
         @Size(min = 1, max=30, message = "Il titolo deve essere compreso tra 1 e 30 caratteri")
@@ -32,10 +34,12 @@ public record NewBlogArticleDTO(
         @Size(min = 20, max=400, message = "il tema deve essere compreso tra 20 e 400 caratteri")
         String consigli,
         @NotEmpty(message = "inserire almeno un genere o più separtati da ',' è un campo obbligatorio!")
-        @Size(min = 4, max=16, message = "inserire almeno un genere massimo 3 ")
+        @Size(min = 4, message = "inserire almeno un genere")
         String genere,
         @NotEmpty(message = "una breve descrizione è un campo obbligatorio!")
         @Size(min = 10, max=30, message = "la descrizione deve essere lunga tra i 10 e i 30 caratteri")
-        String desciption
+        String descrizione,
+        @NotNull(message = "l'id utente è un campo obbligatorio!")
+        UUID user
 ) {
 }

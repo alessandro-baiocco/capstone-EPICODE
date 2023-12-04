@@ -11,6 +11,7 @@ import application.capstone.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -51,12 +52,12 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public Comment findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated PUTCommentDTO body , BindingResult validation) throws NotFoundException {
+    public Comment findByIdAndUpdate(@PathVariable UUID id  ,@AuthenticationPrincipal User currentUser , @RequestBody @Validated PUTCommentDTO body , BindingResult validation) throws NotFoundException {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return commentService.findByIdAndUpdate(id , body);
+                return commentService.findByIdAndUpdate(currentUser.getId(), id , body);
             }catch (IOException e){
                 throw new RuntimeException("problema lato server");
             }
@@ -69,6 +70,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         commentService.findByIdAndDelete(id);
     }

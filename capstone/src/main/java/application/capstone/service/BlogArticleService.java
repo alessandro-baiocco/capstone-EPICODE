@@ -3,8 +3,10 @@ package application.capstone.service;
 import application.capstone.entities.BlogArticle;
 
 import application.capstone.entities.BlogCard;
+import application.capstone.entities.User;
 import application.capstone.enums.Genere;
 
+import application.capstone.enums.Role;
 import application.capstone.enums.Tema;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
@@ -37,11 +39,16 @@ public class BlogArticleService {
     @Autowired
     private BlogCardRepository blogCardRepo;
     @Autowired
+    private UserService userService;
+    @Autowired
     private Cloudinary cloudinary;
 
     public BlogArticle save(NewBlogArticleDTO body) throws IOException {
 
         BlogArticle newBlog = new BlogArticle();
+
+        User userBlog = userService.findById(body.user());
+
 
         newBlog.setTitolo(body.titolo());
         newBlog.setSvillupatore(body.svillupatore());
@@ -68,14 +75,18 @@ public class BlogArticleService {
 
         newBlog.setGenresList(generiSet);
         newBlog.setComments(new ArrayList<>());
+        newBlog.setUser(userBlog);
+        newBlog.setImmaginePrimaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
+        newBlog.setImmagineSecondaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
 
         BlogArticle savedBlog = blogArticleRepo.save(newBlog);
         BlogCard newBlogCard = new BlogCard();
 
         newBlogCard.setTitolo(savedBlog.getTitolo());
-        newBlogCard.setGenere(savedBlog.getTema());
-        newBlogCard.setDescription(body.desciption());
+        newBlogCard.setTema(savedBlog.getTema());
+        newBlogCard.setDescription(body.descrizione());
         newBlogCard.setBlogArticle(savedBlog);
+        newBlogCard.setCover("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
 
         blogCardRepo.save(newBlogCard);
 
@@ -83,39 +94,38 @@ public class BlogArticleService {
     }
 
 
-    public BlogArticle findByIdAndUpdate(UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
+    public BlogArticle findByIdAndUpdate(User user, UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
+
         BlogArticle found = findById(id);
 
-        found.setTitolo(body.titolo());
-        found.setSvillupatore(body.svillupatore());
-        found.setPubblicazione(body.pubblicazione());
-        try {
-            found.setTema(Tema.valueOf(body.tema().trim().toUpperCase()));
-        }catch (IllegalArgumentException ex){
-            throw new BadRequestException("tema non valido");
-        }
+        if(found.getUser().getId() == user.getId() || user.getRuolo() == Role.ADMIN){
+            found.setTitolo(body.titolo());
+            found.setSvillupatore(body.svillupatore());
+            found.setPubblicazione(body.pubblicazione());
 
-        found.setStoria(body.storia());
-        found.setEsperienza(body.esperienza());
-        found.setConsigli(body.consigli());
+            found.setTema(body.tema());
 
-        String[] generi = body.genere().split(",");
-        Set<Genere> generiSet = new HashSet<>();
+            found.setStoria(body.storia());
+            found.setEsperienza(body.esperienza());
+            found.setConsigli(body.consigli());
 
-        for (String s : generi) {
-            try {
-                generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
-            } catch (IllegalArgumentException ex) {
-                throw new BadRequestException("genere " + s + " non valido");
+            String[] generi = body.genere().split(",");
+            Set<Genere> generiSet = new HashSet<>();
+
+            for (String s : generi) {
+                try {
+                    generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
+                } catch (IllegalArgumentException ex) {
+                    throw new BadRequestException("genere " + s + " non valido");
+                }
             }
+
+            found.setGenresList(generiSet);
+
+            found.setComments(new ArrayList<>());
+        }else {
+            throw new BadRequestException("il post non è tuo non puoi cambiarlo");
         }
-
-        found.setGenresList(generiSet);
-
-        found.setComments(new ArrayList<>());
-
-
-
 
         return blogArticleRepo.save(found);
     }
@@ -128,8 +138,6 @@ public class BlogArticleService {
 
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         BlogArticle found = findById(id);
-        BlogCard foundCard = found.getBlogCard();
-        blogCardRepo.delete(foundCard);
         blogArticleRepo.delete(found);
 
     }

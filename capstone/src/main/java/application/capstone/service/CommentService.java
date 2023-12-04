@@ -3,6 +3,7 @@ package application.capstone.service;
 import application.capstone.entities.BlogArticle;
 import application.capstone.entities.Comment;
 import application.capstone.entities.User;
+import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewCommentDTO;
 import application.capstone.payloads.PUTCommentDTO;
@@ -44,10 +45,15 @@ public class CommentService {
     }
 
 
-    public Comment findByIdAndUpdate(UUID id , PUTCommentDTO body) throws NotFoundException , IOException{
+    public Comment findByIdAndUpdate(UUID userId , UUID id , PUTCommentDTO body) throws NotFoundException , IOException{
         Comment found = findById(id);
 
-        found.setComment(body.comment());
+        if(found.getUser().getId() == userId){
+            found.setComment(body.comment());
+        }else {
+            throw new BadRequestException("questo commento non è tuo");
+        }
+
 
         return  commentsRepo.save(found);
     }

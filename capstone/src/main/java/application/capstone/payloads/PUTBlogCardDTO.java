@@ -9,9 +9,9 @@ public record PUTBlogCardDTO(
         String titolo,
         @NotEmpty(message = "Il genere è un campo obbligatorio!")
         @Size(min = 4, max=17, message = "Il genere deve essere compreso tra 1 e 17 caratteri")
-        String genere,
+        String tema,
         @NotEmpty(message = "la descrizione è un campo obbligatorio!")
         @Size(min = 1, max=20, message = "la descrizione deve essere compresa tra 1 e 20 caratteri")
-        String description
+        String descrizione
 ) {
 }
