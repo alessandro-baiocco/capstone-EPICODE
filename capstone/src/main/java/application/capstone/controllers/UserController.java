@@ -6,7 +6,6 @@ import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PUTUserDTO;
-import application.capstone.payloads.RoleDTO;
 import application.capstone.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -89,16 +88,7 @@ public class UserController {
         userService.findByIdAndDelete(currentUser.getId());
     };
 
-    @PatchMapping("/me/upload")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public User changeMyProfilePicture(@AuthenticationPrincipal User currentUser, @RequestParam("avatar") MultipartFile body ){
-        try {
-            return userService.setMyPicture(currentUser , body);
-        }catch (IOException e){
-            throw new RuntimeException("problema lato server");
-        }
 
-    };
 
     @GetMapping("/{id}")
     public User findById(@PathVariable UUID id) throws NotFoundException{
@@ -109,16 +99,6 @@ public class UserController {
     public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
         userService.findByIdAndDelete(id);
     }
-
-    @PutMapping("/promote/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public User findByIdAndPromote(@PathVariable UUID id , @RequestBody RoleDTO role) throws NotFoundException{
-        return userService.findByIdAndPromote(id , role);
-    }
-
-
-
-
 
 
 
