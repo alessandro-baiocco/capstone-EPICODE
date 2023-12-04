@@ -8,6 +8,7 @@ import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PUTUserDTO;
+import application.capstone.payloads.RoleDTO;
 import application.capstone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -123,6 +124,13 @@ public class UserService {
     public void findByIdAndDelete(UUID id) throws NotFoundException{
         User found = findById(id);
         userRepo.delete(found);
+    }
+
+    public User findByIdAndPromote(UUID id , RoleDTO role){
+        User found = findById(id);
+        found.setRuolo(role.role());
+        return  userRepo.save(found);
+
     }
 
 

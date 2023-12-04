@@ -1,23 +1,19 @@
 package application.capstone.validatorEnums;
 
 import application.capstone.enums.Tema;
-import application.capstone.exceptions.BadRequestException;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.codec.language.bm.Rule;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class StatoValidator implements ConstraintValidator<TemaEnumValidator, Tema> {
-    @Override
-    public void initialize(TemaEnumValidator constraintAnnotation) {
-        ConstraintValidator.super.initialize(constraintAnnotation);
-    }
-
+public class TemaValidator implements ConstraintValidator<TemaEnumValidator, Tema> {
+    
     @Override
     public boolean isValid(Tema tema, ConstraintValidatorContext constraintValidatorContext) {
         List<Tema> temi = Arrays.stream(Tema.values()).toList();
         return temi.contains(tema);
-
     }
 }
