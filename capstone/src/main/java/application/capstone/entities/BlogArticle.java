@@ -39,7 +39,7 @@ public class BlogArticle {
     @Lob
     @Column(name = "consigli", columnDefinition="VARCHAR(500)")
     private String consigli;
-    @OneToMany
+    @OneToMany(mappedBy = "blogArticle")
     private List<Comment> comments;
     @JsonIgnore
     @OneToOne(mappedBy = "blogArticle" , cascade = CascadeType.REMOVE)

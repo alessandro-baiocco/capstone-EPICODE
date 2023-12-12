@@ -54,9 +54,9 @@ public class BlogArticleService {
         newBlog.setSvillupatore(body.svillupatore());
         newBlog.setPubblicazione(body.pubblicazione());
         try {
-            newBlog.setTema(body.tema());
+            newBlog.setTema(Tema.valueOf(body.tema()));
         }catch (IllegalArgumentException ex){
-            throw new BadRequestException("tema non valido");
+            throw new BadRequestException(body.tema() + " non valido");
         }
 
         newBlog.setStoria(body.storia());

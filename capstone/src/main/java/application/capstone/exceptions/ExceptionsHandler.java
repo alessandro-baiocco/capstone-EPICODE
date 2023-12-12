@@ -7,6 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,11 @@ public class ExceptionsHandler {
         } else {
             return new ErrorsResponseWithListDTO(e.getMessage(), new Date(), new ArrayList<>());
         }
+    }
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponseDTO handlePathNotFound(UnauthorizedException e){
+        return new ErrorResponseDTO("l'end point specificato non è stato trovato", new Date());
     }
 
     @ExceptionHandler(UnauthorizedException.class)

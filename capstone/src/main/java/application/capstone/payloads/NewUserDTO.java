@@ -22,6 +22,8 @@ public record NewUserDTO(
         @NotEmpty(message = "L'email è un campo obbligatorio!")
         @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "L'email inserita non è valida")
         String email,
+        @Size( max=30, message = "la descrizione deve essere massimo di 30 caratteri")
+        String descrizione,
         String generePreferito
 
         ) {

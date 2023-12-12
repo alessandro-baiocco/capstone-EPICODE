@@ -32,7 +32,8 @@ public class User implements UserDetails {
     private String avatar;
     @Enumerated(EnumType.STRING)
     private Genere generePreferito;
-    private String username;
+    private String userName;
+    private String descrizione;
     private String email;
     @Enumerated(EnumType.STRING)
     private Role ruolo;
@@ -40,6 +41,10 @@ public class User implements UserDetails {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "user")
     private List<BlogArticle> blogs;
 
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -66,7 +71,7 @@ public class User implements UserDetails {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.userName = username;
     }
 
     public void setEmail(String email) {
@@ -80,6 +85,11 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.ruolo.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.userName;
     }
 
     @Override

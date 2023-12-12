@@ -33,7 +33,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User register(@RequestBody @Validated NewUserDTO body , BindingResult validation){
+    public UserLoginSuccessDTO register(@RequestBody @Validated NewUserDTO body , BindingResult validation){
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {

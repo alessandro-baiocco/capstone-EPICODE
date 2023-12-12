@@ -7,6 +7,7 @@ import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.UnauthorizedException;
 import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.UserLoginDTO;
+import application.capstone.payloads.UserLoginSuccessDTO;
 import application.capstone.repositories.UserRepository;
 import application.capstone.security.JWTTools;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class AuthService {
     }
 
 
-    public User register(NewUserDTO body) throws IOException {
+    public UserLoginSuccessDTO register(NewUserDTO body) throws IOException {
         userRepo.findByEmail(body.email()).ifPresent( user -> {
             try {
                 throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
@@ -51,7 +52,7 @@ public class AuthService {
                 throw new RuntimeException(e);
             }
         });
-        userRepo.findByUsername(body.userName()).ifPresent( user -> {
+        userRepo.findByUserName(body.userName()).ifPresent( user -> {
             try {
                 throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
             } catch (BadRequestException e) {
@@ -68,6 +69,7 @@ public class AuthService {
         newUser.setPassword(bcrypt.encode(body.password()));
         newUser.setEmail(body.email());
         newUser.setRuolo(Role.USER);
+        newUser.setDescrizione(body.descrizione());
 
         if(body.generePreferito() != null){
             try {
@@ -79,8 +81,11 @@ public class AuthService {
         }
         newUser.setComments(new ArrayList<>());
 
+        UserLoginDTO login = new UserLoginDTO(body.userName(), body.password());
 
-        return userRepo.save(newUser);
+
+        userRepo.save(newUser);
+        return new UserLoginSuccessDTO(authenticateUser(login));
     }
 
 

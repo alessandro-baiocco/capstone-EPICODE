@@ -4,6 +4,8 @@ import application.capstone.entities.BlogArticle;
 import application.capstone.entities.BlogCard;
 import application.capstone.enums.Tema;
 import application.capstone.validatorEnums.TemaEnumValidator;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -22,8 +24,7 @@ public record NewBlogArticleDTO(
         @Size(min = 1, max=30, message = "Il nome di chi ha pubblicato il titolo deve essere compreso tra 1 e 30 caratteri")
         String pubblicazione,
         @NotNull(message = "il tema è un campo obbligatorio")
-        @TemaEnumValidator
-        Tema tema,
+        String tema,
         @NotEmpty(message = "la storia è un campo obbligatorio!")
         @Size(min = 20, max=500, message = "la storia deve essere compreso tra 20 e 500 caratteri")
         String storia,

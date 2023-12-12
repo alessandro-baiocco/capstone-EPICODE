@@ -41,7 +41,7 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
     }
     public User findByUserName(String userName){
-        return userRepo.findByUsername(userName)
+        return userRepo.findByUserName(userName)
                 .orElseThrow(() -> new NotFoundException("Utente con userName " + userName + " non trovato!"));
     }
 
@@ -67,6 +67,10 @@ public class UserService {
             }
 
         }
+        found.setDescrizione(body.descrizione());
+
+
+
         return  userRepo.save(found);
     }
 
