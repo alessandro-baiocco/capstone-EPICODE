@@ -57,8 +57,7 @@ public class UserService {
         }
         found.setNome(body.nome());
         found.setCognome(body.cognome());
-        found.setPassword(bcrypt.encode(body.password()));
-        found.setUsername(body.userName());
+        found.setUsername(body.username());
         if(body.generePreferito() != null){
             try {
                 found.setGenerePreferito(Genere.valueOf(body.generePreferito().toUpperCase()));

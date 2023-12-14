@@ -47,8 +47,7 @@ public class CommentService {
 
     public Comment findByIdAndUpdate(UUID userId , UUID id , PUTCommentDTO body) throws NotFoundException , IOException{
         Comment found = findById(id);
-
-        if(found.getUser().getId() == userId){
+        if(found.getUser().getId().equals(userId)){
             found.setComment(body.comment());
         }else {
             throw new BadRequestException("questo commento non è tuo");

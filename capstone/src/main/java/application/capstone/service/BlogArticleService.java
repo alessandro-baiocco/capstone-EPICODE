@@ -98,7 +98,7 @@ public class BlogArticleService {
 
         BlogArticle found = findById(id);
 
-        if(found.getUser().getId() == user.getId() || user.getRuolo() == Role.ADMIN){
+        if(found.getUser().getId().equals(user.getId()) || user.getRuolo().equals(Role.ADMIN)){
             found.setTitolo(body.titolo());
             found.setSvillupatore(body.svillupatore());
             found.setPubblicazione(body.pubblicazione());
@@ -122,7 +122,6 @@ public class BlogArticleService {
 
             found.setGenresList(generiSet);
 
-            found.setComments(new ArrayList<>());
         }else {
             throw new BadRequestException("il post non è tuo non puoi cambiarlo");
         }

@@ -80,7 +80,6 @@ public class UserController {
     };
 
     @PatchMapping("/me/upload")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public User changeMyProfilePicture(@AuthenticationPrincipal User currentUser, @RequestParam("avatar") MultipartFile body ){
         try {
             return userService.setMyPicture(currentUser , body);
