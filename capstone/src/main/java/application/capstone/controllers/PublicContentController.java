@@ -42,7 +42,7 @@ public class PublicContentController {
 
     @GetMapping("/cards")
     public Page<BlogCard> getAllCards(@RequestParam(defaultValue = "0")int page ,
-                                      @RequestParam(defaultValue = "10")int size,
+                                      @RequestParam(defaultValue = "12")int size,
                                       @RequestParam(defaultValue = "id")String order){
         return blogCardService.getAllBlogCard(page , size , order);
     }

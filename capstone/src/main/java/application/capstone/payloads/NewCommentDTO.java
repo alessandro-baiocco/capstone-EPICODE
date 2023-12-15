@@ -10,7 +10,7 @@ public record NewCommentDTO(
         @NotNull(message = "l'id del blog è un campo obbligatorio")
         UUID blog,
         @NotEmpty(message = "il testo del messaggio è un campo obbligatorio")
-        @Size(min = 1 , max = 200 , message = "il testo del messaggio deve essere compreso tra 1 e 200 ")
+        @Size(min = 1 , max = 201 , message = "il testo del messaggio deve essere compreso tra 1 e 200 ")
         String comment
 ) {
 }

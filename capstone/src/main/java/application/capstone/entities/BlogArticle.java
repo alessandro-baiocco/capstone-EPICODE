@@ -31,15 +31,15 @@ public class BlogArticle {
     @Enumerated(EnumType.STRING)
     private Tema tema;
     @Lob
-    @Column(name = "storia", columnDefinition="VARCHAR(500)")
+    @Column(name = "storia", columnDefinition="VARCHAR(900)")
     private String storia;
     @Lob
-    @Column(name = "esperienza", columnDefinition="VARCHAR(500)")
+    @Column(name = "esperienza", columnDefinition="VARCHAR(600)")
     private String esperienza;
     @Lob
-    @Column(name = "consigli", columnDefinition="VARCHAR(500)")
+    @Column(name = "consigli", columnDefinition="VARCHAR(600)")
     private String consigli;
-    @OneToMany(mappedBy = "blogArticle")
+    @OneToMany(mappedBy = "blogArticle" , cascade = CascadeType.REMOVE)
     private List<Comment> comments;
     @JsonIgnore
     @OneToOne(mappedBy = "blogArticle" , cascade = CascadeType.REMOVE)
