@@ -43,11 +43,11 @@ public class BlogArticleService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public BlogArticle save(NewBlogArticleDTO body) throws IOException {
+    public BlogArticle save(NewBlogArticleDTO body , User user) throws IOException {
 
         BlogArticle newBlog = new BlogArticle();
 
-        User userBlog = userService.findById(body.user());
+
 
 
         newBlog.setTitolo(body.titolo());
@@ -62,10 +62,9 @@ public class BlogArticleService {
         newBlog.setStoria(body.storia());
         newBlog.setEsperienza(body.esperienza());
         newBlog.setConsigli(body.consigli());
-        String[] generi = body.genere().split(",");
         Set<Genere> generiSet = new HashSet<>();
 
-        for (String s : generi) {
+        for (String s : body.genere()) {
             try {
                 generiSet.add(Genere.valueOf(s));
             } catch (IllegalArgumentException ex) {
@@ -75,7 +74,7 @@ public class BlogArticleService {
 
         newBlog.setGenresList(generiSet);
         newBlog.setComments(new ArrayList<>());
-        newBlog.setUser(userBlog);
+        newBlog.setUser(user);
         newBlog.setImmaginePrimaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
         newBlog.setImmagineSecondaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
 
@@ -97,8 +96,11 @@ public class BlogArticleService {
     public BlogArticle findByIdAndUpdate(User user, UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
 
         BlogArticle found = findById(id);
+        System.out.println(found);
+        System.out.println(found.getUser().getId());
+        System.out.println(user.getId());
 
-        if(found.getUser().getId().equals(user.getId()) || user.getRuolo().equals(Role.ADMIN)){
+        if(found.getUser().getId().equals(user.getId())){
             found.setTitolo(body.titolo());
             found.setSvillupatore(body.svillupatore());
             found.setPubblicazione(body.pubblicazione());
@@ -109,10 +111,9 @@ public class BlogArticleService {
             found.setEsperienza(body.esperienza());
             found.setConsigli(body.consigli());
 
-            String[] generi = body.genere().split(",");
             Set<Genere> generiSet = new HashSet<>();
 
-            for (String s : generi) {
+            for (String s : body.genresList()) {
                 try {
                     generiSet.add(Genere.valueOf(s.trim().toUpperCase()));
                 } catch (IllegalArgumentException ex) {
@@ -121,7 +122,10 @@ public class BlogArticleService {
             }
 
             found.setGenresList(generiSet);
-
+            BlogCard cardFound = found.getBlogCard();
+            cardFound.setTitolo(body.titolo());
+            cardFound.setTema(body.tema());
+            blogCardRepo.save(cardFound);
         }else {
             throw new BadRequestException("il post non è tuo non puoi cambiarlo");
         }

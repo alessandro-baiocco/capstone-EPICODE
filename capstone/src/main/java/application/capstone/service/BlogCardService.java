@@ -40,12 +40,6 @@ public class BlogCardService {
     public BlogCard findByIdAndUpdate(UUID id , PUTBlogCardDTO body) throws NotFoundException , IOException {
         BlogCard found = findById(id);
 
-        found.setTitolo(body.titolo());
-        try {
-            found.setTema(Tema.valueOf(body.tema()));
-        }catch (IllegalArgumentException ex){
-            throw new BadRequestException("tema " + body.tema() +  " non valido");
-        }
 
         found.setDescription(body.descrizione());
 

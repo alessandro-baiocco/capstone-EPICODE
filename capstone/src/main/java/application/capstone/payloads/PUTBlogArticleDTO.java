@@ -28,7 +28,6 @@ public record PUTBlogArticleDTO(@NotEmpty(message = "Il titolo è un campo obbli
                                 @Size(min = 20, max=200, message = "il tema deve essere compreso tra 20 e 200 caratteri")
                                 String consigli,
                                 @NotEmpty(message = "inserire almeno un genere o più separtati da ',' è un campo obbligatorio!")
-                                @Size(min = 4, max=30, message = "inserire almeno un genere")
-                                String genere
+                                String[] genresList
 ) {
 }

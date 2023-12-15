@@ -26,21 +26,18 @@ public record NewBlogArticleDTO(
         @NotNull(message = "il tema è un campo obbligatorio")
         String tema,
         @NotEmpty(message = "la storia è un campo obbligatorio!")
-        @Size(min = 20, max=500, message = "la storia deve essere compreso tra 20 e 500 caratteri")
+        @Size(min = 20, max=900, message = "la storia deve essere compreso tra 20 e 900 caratteri")
         String storia,
         @NotEmpty(message = "l'esperienza è un campo obbligatorio!")
-        @Size(min = 20, max=400, message = "l'esperienza deve essere compreso tra 20 e 400 caratteri")
+        @Size(max=400, message = "l'esperienza deve essere massimo di 400 caratteri")
         String esperienza,
         @NotEmpty(message = "i consigli è un campo obbligatorio!")
-        @Size(min = 20, max=400, message = "il tema deve essere compreso tra 20 e 400 caratteri")
+        @Size(max=400, message = "i consigli deveno essere massimo di e 400 caratteri")
         String consigli,
-        @NotEmpty(message = "inserire almeno un genere o più separtati da ',' è un campo obbligatorio!")
-        @Size(min = 4, message = "inserire almeno un genere")
-        String genere,
+        @NotEmpty(message = "inserire almeno un genere")
+        String[] genere,
         @NotEmpty(message = "una breve descrizione è un campo obbligatorio!")
         @Size(min = 10, max=30, message = "la descrizione deve essere lunga tra i 10 e i 30 caratteri")
-        String descrizione,
-        @NotNull(message = "l'id utente è un campo obbligatorio!")
-        UUID user
+        String descrizione
 ) {
 }

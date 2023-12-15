@@ -30,12 +30,12 @@ public class BlogArticleController {
     @PostMapping("")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'CREATOR')")
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogArticle save(@RequestBody @Validated NewBlogArticleDTO body ,  BindingResult validation) {
+    public BlogArticle save(@RequestBody @Validated NewBlogArticleDTO body , @AuthenticationPrincipal User currentUser ,  BindingResult validation) {
         if(validation.hasErrors()){
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return blogArticleService.save(body);
+                return blogArticleService.save(body , currentUser);
             }catch (IOException e){
                 throw new RuntimeException("problema lato server");
             }
