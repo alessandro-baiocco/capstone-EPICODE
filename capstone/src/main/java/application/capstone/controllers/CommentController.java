@@ -31,8 +31,9 @@ public class CommentController {
     @GetMapping("")
     public Page<Comment> getAllComment(@RequestParam(defaultValue = "0")int page ,
                                            @RequestParam(defaultValue = "10")int size,
-                                           @RequestParam(defaultValue = "createdAt")String order){
-        return commentService.getAllComment(page , size , order);
+                                           @RequestParam(defaultValue = "createdAt")String order,
+                                            @RequestParam(defaultValue = "true") boolean ascending ){
+        return commentService.getAllComment(page , size , order , ascending);
     }
 
 

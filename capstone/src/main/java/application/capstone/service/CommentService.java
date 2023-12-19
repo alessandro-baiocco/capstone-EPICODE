@@ -66,8 +66,9 @@ public class CommentService {
 
 
 
-    public Page<Comment> getAllComment(int page , int size , String order){
+    public Page<Comment> getAllComment(int page , int size , String order , boolean ascending ){
         Pageable pageable = PageRequest.of(page, size , Sort.by(order));
+        if (!ascending) pageable = PageRequest.of(page, size, Sort.by(order).descending());
         return commentsRepo.findAll(pageable);
     }
 
