@@ -52,7 +52,7 @@ public class AuthService {
                 throw new RuntimeException(e);
             }
         });
-        userRepo.findByUserName(body.userName()).ifPresent( user -> {
+        userRepo.findByUserName(body.username()).ifPresent( user -> {
             try {
                 throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
             } catch (BadRequestException e) {
@@ -65,7 +65,7 @@ public class AuthService {
         newUser.setCognome(body.cognome());
         newUser.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" " , "") + "+" + body.cognome().replace(" " , ""));
         newUser.setNome(body.nome());
-        newUser.setUsername(body.userName());
+        newUser.setUsername(body.username());
         newUser.setPassword(bcrypt.encode(body.password()));
         newUser.setEmail(body.email());
         newUser.setRuolo(Role.USER);
@@ -81,7 +81,7 @@ public class AuthService {
         }
         newUser.setComments(new ArrayList<>());
 
-        UserLoginDTO login = new UserLoginDTO(body.userName(), body.password());
+        UserLoginDTO login = new UserLoginDTO(body.username(), body.password());
 
 
         userRepo.save(newUser);
