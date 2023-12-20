@@ -1,0 +1,33 @@
+package application.capstone.enums;
+
+public enum Genere {
+    SPARATUTTO,
+    STRATEGICO,
+    AZIONE,
+    BROWSERGAME,
+    ROUGELIKE,
+    SOULSLIKE,
+    GATCHA,
+    METROIDVANIA,
+    OPENWORLD,
+    RETRO,
+    PICCHIADURO,
+    GIOCODIRUOLO,
+    TOWERDEFENSE,
+    ZOMBIE,
+    MUSICALGAME,
+    SPORTIVO,
+    ENIGMI,
+    PARTYGAME,
+    BATTLEROYALE,
+    DUNGEONCRAWLER,
+    GESTIONALE,
+    HACKANDSLASH,
+    PVP,
+    PVEVP,
+    AVVENTURAGRAFICA,
+    SANDBOX,
+    PLATFORM,
+    SIMULATORE
+
+}
