@@ -33,7 +33,7 @@ public class SecurityConfig {
     @Autowired
     private ExceptionsHandlerFilter exceptionsHandlerFilter;
 
-    @Value("#{'${cors.allowed-origins}'.split(',')}")
+    @Value("#{'${cors_allowed_origins}'.split(',')}")
     private List<String> allowedOrigins;
 
 
