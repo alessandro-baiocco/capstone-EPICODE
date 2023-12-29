@@ -44,20 +44,13 @@ public class AuthService {
     }
 
 
-    public UserLoginSuccessDTO register(NewUserDTO body) throws IOException {
+    public UserLoginSuccessDTO register(NewUserDTO body) throws IOException, BadRequestException {
         userRepo.findByEmail(body.email()).ifPresent( user -> {
-            try {
                 throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
-            } catch (BadRequestException e) {
-                throw new RuntimeException(e);
-            }
+
         });
         userRepo.findByUserName(body.username()).ifPresent( user -> {
-            try {
                 throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
-            } catch (BadRequestException e) {
-                throw new RuntimeException(e);
-            }
         });
 
         User newUser = new User();

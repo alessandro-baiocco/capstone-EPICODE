@@ -41,7 +41,7 @@ public class AuthController {
                 return authService.register(body);
             }catch (IOException e){
                 System.err.println(e.getMessage());
-                return null;
+                throw new BadRequestException(validation.getAllErrors());
             }
 
         }
