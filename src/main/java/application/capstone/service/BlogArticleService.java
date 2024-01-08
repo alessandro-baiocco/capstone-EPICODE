@@ -1,19 +1,14 @@
 package application.capstone.service;
 
 import application.capstone.entities.BlogArticle;
-
 import application.capstone.entities.BlogCard;
 import application.capstone.entities.User;
 import application.capstone.enums.Genere;
-
-import application.capstone.enums.Role;
 import application.capstone.enums.Tema;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
 import application.capstone.payloads.NewBlogArticleDTO;
-
 import application.capstone.payloads.PUTBlogArticleDTO;
-
 import application.capstone.repositories.BlogArticleRepository;
 import application.capstone.repositories.BlogCardRepository;
 import com.cloudinary.Cloudinary;
@@ -24,12 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class BlogArticleService {
@@ -43,11 +39,9 @@ public class BlogArticleService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public BlogArticle save(NewBlogArticleDTO body , User user) throws IOException {
+    public BlogArticle save(NewBlogArticleDTO body, User user) throws IOException, BadRequestException {
 
         BlogArticle newBlog = new BlogArticle();
-
-
 
 
         newBlog.setTitolo(body.titolo());
@@ -55,7 +49,7 @@ public class BlogArticleService {
         newBlog.setPubblicazione(body.pubblicazione());
         try {
             newBlog.setTema(Tema.valueOf(body.tema()));
-        }catch (IllegalArgumentException ex){
+        } catch (IllegalArgumentException ex) {
             throw new BadRequestException(body.tema() + " non valido");
         }
 
@@ -75,8 +69,8 @@ public class BlogArticleService {
         newBlog.setGenresList(generiSet);
         newBlog.setComments(new ArrayList<>());
         newBlog.setUser(user);
-        newBlog.setImmaginePrimaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
-        newBlog.setImmagineSecondaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
+        newBlog.setImmaginePrimaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" ", ""));
+        newBlog.setImmagineSecondaria("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" ", ""));
 
         BlogArticle savedBlog = blogArticleRepo.save(newBlog);
         BlogCard newBlogCard = new BlogCard();
@@ -85,7 +79,7 @@ public class BlogArticleService {
         newBlogCard.setTema(savedBlog.getTema());
         newBlogCard.setDescription(body.descrizione());
         newBlogCard.setBlogArticle(savedBlog);
-        newBlogCard.setCover("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" " , ""));
+        newBlogCard.setCover("https://ui-avatars.com/api/?name=" + "+" + body.titolo().trim().replace(" ", ""));
 
         blogCardRepo.save(newBlogCard);
 
@@ -93,14 +87,14 @@ public class BlogArticleService {
     }
 
 
-    public BlogArticle findByIdAndUpdate(User user, UUID id , PUTBlogArticleDTO body) throws NotFoundException , IOException {
+    public BlogArticle findByIdAndUpdate(User user, UUID id, PUTBlogArticleDTO body) throws NotFoundException, IOException {
 
         BlogArticle found = findById(id);
         System.out.println(found);
         System.out.println(found.getUser().getId());
         System.out.println(user.getId());
 
-        if(found.getUser().getId().equals(user.getId())){
+        if (found.getUser().getId().equals(user.getId())) {
             found.setTitolo(body.titolo());
             found.setSvillupatore(body.svillupatore());
             found.setPubblicazione(body.pubblicazione());
@@ -126,7 +120,7 @@ public class BlogArticleService {
             cardFound.setTitolo(body.titolo());
             cardFound.setTema(body.tema());
             blogCardRepo.save(cardFound);
-        }else {
+        } else {
             throw new BadRequestException("il post non è tuo non puoi cambiarlo");
         }
 
@@ -134,18 +128,17 @@ public class BlogArticleService {
     }
 
 
-
-    public BlogArticle findById(UUID id) throws NotFoundException{
+    public BlogArticle findById(UUID id) throws NotFoundException {
         return blogArticleRepo.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
-    public void findByIdAndDelete(UUID id) throws NotFoundException{
+    public void findByIdAndDelete(UUID id) throws NotFoundException {
         BlogArticle found = findById(id);
         blogArticleRepo.delete(found);
 
     }
 
-    public BlogArticle setPrimaryPicture(UUID id , MultipartFile file) throws IOException, NotFoundException {
+    public BlogArticle setPrimaryPicture(UUID id, MultipartFile file) throws IOException, NotFoundException {
         BlogArticle found = findById(id);
         BlogCard cardFound = found.getBlogCard();
         String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
@@ -156,21 +149,17 @@ public class BlogArticleService {
         return blogArticleRepo.save(found);
     }
 
-    public BlogArticle setSecondaryPicture(UUID id , MultipartFile file) throws IOException, NotFoundException {
+    public BlogArticle setSecondaryPicture(UUID id, MultipartFile file) throws IOException, NotFoundException {
         BlogArticle found = findById(id);
         String newImage = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         found.setImmagineSecondaria(newImage);
         return blogArticleRepo.save(found);
     }
 
-    public Page<BlogArticle> getAllArticle(int page , int size , String order){
-        Pageable pageable = PageRequest.of(page, size , Sort.by(order));
+    public Page<BlogArticle> getAllArticle(int page, int size, String order) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(order));
         return blogArticleRepo.findAll(pageable);
     }
-
-
-
-
 
 
 }
