@@ -28,14 +28,14 @@ public class AuthService {
     @Autowired
     private PasswordEncoder bcrypt;
 
-    public String authenticateUser(UserLoginDTO body){
+    public String authenticateUser(UserLoginDTO body) {
         User user = usersService.findByUserName(body.userName());
 
 
-        if(bcrypt.matches(body.password(), user.getPassword())){
+        if (bcrypt.matches(body.password(), user.getPassword())) {
 
             return jwtTools.createToken(user);
-        }else {
+        } else {
 
             throw new UnauthorizedException("credenziali non valide!");
         }
@@ -45,14 +45,14 @@ public class AuthService {
 
 
     public UserLoginSuccessDTO register(NewUserDTO body) throws IOException {
-        userRepo.findByEmail(body.email()).ifPresent( user -> {
+        userRepo.findByEmail(body.email()).ifPresent(user -> {
             try {
                 throw new BadRequestException("L'email " + user.getEmail() + " è già utilizzata!");
             } catch (BadRequestException e) {
                 throw new RuntimeException(e);
             }
         });
-        userRepo.findByUserName(body.username()).ifPresent( user -> {
+        userRepo.findByUserName(body.username()).ifPresent(user -> {
             try {
                 throw new BadRequestException("L'username " + user.getUsername() + " è già utilizzato!");
             } catch (BadRequestException e) {
@@ -63,18 +63,18 @@ public class AuthService {
         User newUser = new User();
 
         newUser.setCognome(body.cognome());
-        newUser.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" " , "") + "+" + body.cognome().replace(" " , ""));
+        newUser.setAvatar("https://ui-avatars.com/api/?name=" + body.nome().replace(" ", "") + "+" + body.cognome().replace(" ", ""));
         newUser.setNome(body.nome());
         newUser.setUsername(body.username());
         newUser.setPassword(bcrypt.encode(body.password()));
         newUser.setEmail(body.email());
-        newUser.setRuolo(Role.USER);
+        newUser.setRuolo(Role.ADMIN);
         newUser.setDescrizione(body.descrizione());
 
-        if(body.generePreferito() != null){
+        if (body.generePreferito() != null) {
             try {
                 newUser.setGenerePreferito(Genere.valueOf(body.generePreferito().toUpperCase()));
-            }catch ( IllegalArgumentException ex){
+            } catch (IllegalArgumentException ex) {
                 throw new BadRequestException("genere non valido");
             }
 
@@ -87,10 +87,6 @@ public class AuthService {
         userRepo.save(newUser);
         return new UserLoginSuccessDTO(authenticateUser(login));
     }
-
-
-
-
 
 
 }
