@@ -68,7 +68,7 @@ public class AuthService {
         newUser.setUsername(body.username());
         newUser.setPassword(bcrypt.encode(body.password()));
         newUser.setEmail(body.email());
-        newUser.setRuolo(Role.ADMIN);
+        newUser.setRuolo(Role.USER);
         newUser.setDescrizione(body.descrizione());
 
         if (body.generePreferito() != null) {

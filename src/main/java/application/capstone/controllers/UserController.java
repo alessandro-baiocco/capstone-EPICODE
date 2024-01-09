@@ -4,7 +4,6 @@ package application.capstone.controllers;
 import application.capstone.entities.User;
 import application.capstone.exceptions.BadRequestException;
 import application.capstone.exceptions.NotFoundException;
-import application.capstone.payloads.NewUserDTO;
 import application.capstone.payloads.PUTUserDTO;
 import application.capstone.payloads.RoleDTO;
 import application.capstone.service.UserService;
@@ -32,26 +31,22 @@ public class UserController {
 
     @GetMapping("")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<User> getAllUser(@RequestParam(defaultValue = "0")int page ,
-                                 @RequestParam(defaultValue = "10")int size,
-                                 @RequestParam(defaultValue = "id")String order){
-        return userService.getAllUser(page , size , order);
+    public Page<User> getAllUser(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "12") int size,
+                                 @RequestParam(defaultValue = "id") String order) {
+        return userService.getAllUser(page, size, order);
     }
-
-
-
-
 
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User findByIdAndUpdate(@PathVariable UUID id , @RequestBody @Validated PUTUserDTO body , BindingResult validation) throws NotFoundException {
-        if(validation.hasErrors()){
+    public User findByIdAndUpdate(@PathVariable UUID id, @RequestBody @Validated PUTUserDTO body, BindingResult validation) throws NotFoundException {
+        if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return userService.findByIdAndUpdate(id , body);
-            }catch (IOException e){
+                return userService.findByIdAndUpdate(id, body);
+            } catch (IOException e) {
                 throw new RuntimeException("problema lato server");
             }
         }
@@ -59,67 +54,70 @@ public class UserController {
 
 
     @GetMapping("/me")
-    public UserDetails getProfile(@AuthenticationPrincipal UserDetails currentUser){
+    public UserDetails getProfile(@AuthenticationPrincipal UserDetails currentUser) {
         return currentUser;
-    };
+    }
+
+    ;
 
     @PutMapping("/me")
-    public User putMyProfile(@AuthenticationPrincipal User currentUser, @RequestBody PUTUserDTO body){
+    public User putMyProfile(@AuthenticationPrincipal User currentUser, @RequestBody PUTUserDTO body) {
         try {
             return userService.findByIdAndUpdate(currentUser.getId(), body);
-        }catch (IOException e){
-        throw new RuntimeException("problema lato server");
-    }
+        } catch (IOException e) {
+            throw new RuntimeException("problema lato server");
+        }
 
     }
 
     @DeleteMapping("/me")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMyProfile(@AuthenticationPrincipal User currentUser){
+    public void deleteMyProfile(@AuthenticationPrincipal User currentUser) {
         userService.findByIdAndDelete(currentUser.getId());
-    };
+    }
+
+    ;
 
     @PatchMapping("/me/upload")
-    public User changeMyProfilePicture(@AuthenticationPrincipal User currentUser, @RequestParam("avatar") MultipartFile body ){
+    public User changeMyProfilePicture(@AuthenticationPrincipal User currentUser, @RequestParam("avatar") MultipartFile body) {
         try {
-            return userService.setMyPicture(currentUser , body);
-        }catch (IOException e){
+            return userService.setMyPicture(currentUser, body);
+        } catch (IOException e) {
             throw new RuntimeException("problema lato server");
         }
 
-    };
+    }
 
+    ;
 
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User findById(@PathVariable UUID id) throws NotFoundException{
+    public User findById(@PathVariable UUID id) throws NotFoundException {
         return userService.findById(id);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException{
+    public void findByIdAndDelete(@PathVariable UUID id) throws NotFoundException {
         userService.findByIdAndDelete(id);
     }
 
 
-
     @PutMapping("promote/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User findByIdAndPromote(@PathVariable UUID id , @RequestBody @Validated RoleDTO body , BindingResult validation) throws NotFoundException {
-        if(validation.hasErrors()){
+    public User findByIdAndPromote(@PathVariable UUID id, @RequestBody @Validated RoleDTO body, BindingResult validation) throws NotFoundException {
+        if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors());
         } else {
             try {
-                return userService.findByIdAndPromote(id , body);
-            }catch (IOException e){
+                return userService.findByIdAndPromote(id, body);
+            } catch (IOException e) {
                 throw new RuntimeException("problema lato server");
             }
         }
     }
-
 
 
 }
